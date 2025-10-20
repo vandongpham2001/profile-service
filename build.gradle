@@ -38,6 +38,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -55,7 +56,6 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
 
     implementation "com.nimbusds:nimbus-jose-jwt:${nimbusJwtVersion}"
-    testImplementation "com.h2database:h2:${h2Version}"
     implementation "org.json:json:${orgJsonVersion}"
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${openfeignVersion}"
     implementation "org.springframework.data:spring-data-neo4j"
