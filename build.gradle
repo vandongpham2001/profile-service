@@ -55,7 +55,6 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers'
     testImplementation 'org.testcontainers:junit-jupiter'
 
-    implementation "com.nimbusds:nimbus-jose-jwt:${nimbusJwtVersion}"
     implementation "org.json:json:${orgJsonVersion}"
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${openfeignVersion}"
     implementation "org.springframework.data:spring-data-neo4j"
