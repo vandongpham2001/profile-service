@@ -1,0 +1,27 @@
+server:
+  port: ${PROFILE_SERVICE_PORT}
+  servlet:
+    context-path: /profile
+
+spring:
+  application:
+    name: profile-service
+  neo4j:
+    uri: bolt://${PROFILE_NEO4J_DB_HOST}:${PROFILE_NEO4J_DB_BOLT_PORT}
+    authentication:
+      username: ${PROFILE_NEO4J_DB_USERNAME}
+      password: ${PROFILE_NEO4J_DB_PASSWORD}
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+app:
+  services:
+    file:
+      url: ${FILE_SERVICE_HOST}
+
+grpc:
+  server:
+    port: ${PROFILE_SERVICE_GRPC_PORT}

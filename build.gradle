@@ -5,6 +5,7 @@ plugins {
     id 'io.freefair.lombok' version "${freefairLombokVersion}"
     id 'jacoco'
     id 'com.diffplug.spotless' version "${spotlessVersion}"
+    id 'com.google.protobuf' version "${protobufPluginVersion}"
 }
 
 group = sysGroup
@@ -36,6 +37,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -57,10 +59,18 @@ dependencies {
 
     implementation "org.json:json:${orgJsonVersion}"
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${openfeignVersion}"
-    implementation "org.springframework.data:spring-data-neo4j"
+
     testRuntimeOnly "org.apache.logging.log4j:log4j-core"
     testRuntimeOnly "org.apache.logging.log4j:log4j-jul"
     testRuntimeOnly "org.apache.logging.log4j:log4j-slf4j-impl"
+
+    // gRPC Dependencies
+    implementation "net.devh:grpc-server-spring-boot-starter:${grpcStarterVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+
+    implementation "jakarta.annotation:jakarta.annotation-api:${jakartaAnnotationVersion}"
+    implementation "javax.annotation:javax.annotation-api:${javaxAnnotationVersion}"
 }
 
 tasks.register('installLocalGitHook', Copy) {
@@ -119,5 +129,28 @@ spotless {
         leadingSpacesToTabs()
         palantirJavaFormat()
         importOrder("java", "jakarta", "org", "com", "com.diffplug")
+    }
+}
+
+def generatedFilesBaseDir = layout.buildDirectory.dir("/generated/source/proto")
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${protobufVersion}"
+    }
+    clean {
+        delete generatedFilesBaseDir
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+        }
+    }
+    generateProtoTasks {
+        all().each {task ->
+            task.plugins {
+                grpc {}
+            }
+        }
     }
 }
