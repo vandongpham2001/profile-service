@@ -33,7 +33,6 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -49,7 +48,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation "com.google.guava:guava:${googleGuavaVersion}"
     implementation "org.apache.commons:commons-lang3:${apacheCommonsLang3Version}"
-    compileOnly "com.sun.xml.bind:jaxb-osgi:${jaxbOsgiVersion}"
+    implementation "com.sun.xml.bind:jaxb-osgi:${jaxbOsgiVersion}"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
@@ -68,9 +67,12 @@ dependencies {
     implementation "net.devh:grpc-server-spring-boot-starter:${grpcStarterVersion}"
     implementation "io.grpc:grpc-stub:${grpcVersion}"
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "com.google.protobuf:protobuf-java:${protobufVersion}"
 
     implementation "jakarta.annotation:jakarta.annotation-api:${jakartaAnnotationVersion}"
     implementation "javax.annotation:javax.annotation-api:${javaxAnnotationVersion}"
+
+    testImplementation "net.devh:grpc-server-spring-boot-starter:${grpcStarterVersion}"
 }
 
 tasks.register('installLocalGitHook', Copy) {
@@ -132,14 +134,9 @@ spotless {
     }
 }
 
-def generatedFilesBaseDir = layout.buildDirectory.dir("/generated/source/proto")
-
 protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:${protobufVersion}"
-    }
-    clean {
-        delete generatedFilesBaseDir
     }
     plugins {
         grpc {
@@ -151,6 +148,15 @@ protobuf {
             task.plugins {
                 grpc {}
             }
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs("build/generated/source/proto/main/grpc")
+            srcDirs("build/generated/source/proto/main/java")
         }
     }
 }
